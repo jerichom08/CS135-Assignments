@@ -4,7 +4,7 @@ Course: CSCI-136
 Instructor: Sadab Hafiz
 Assignment: Lab 2C
 
-Prints out three items on three separate lines
+Creates an array that allows the user to edit its contents.
 */
 
 #include <iostream>
@@ -17,16 +17,19 @@ int main() {
     for(int i = 0; i < 10; i++) {
         myData[i] = 1;
     }
-    while(i >=0 && i < 10) {
-        for(int i = 0; i < 10;i++) {
+    do {
+        for (int i = 0; i < 10; i++) {
             cout << myData[i] << " ";
         }
+        cout << endl;
         cout << "Input index: ";
         cin >> i;
         cout << "Input value: ";
         cin >> v;
-        myData[i] = v;
-    }
+        if(i >= 0 && i < 10) {
+            myData[i] = v;
+        }
+    } while (i >= 0 && i < 10);
     cout << "Index out of range. Exit.";
     return 0;
 }

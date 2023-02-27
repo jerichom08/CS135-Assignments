@@ -6,7 +6,7 @@ Assignment: Lab 2A
 
 Asks for user input of an integer in the range 0 < n < 100. 
 If the number is not in range, the program keeps asking the user to re-enter until a number is in range. 
-After a vlid input is taken, prints the number squared.
+After a valid input is taken, prints the number squared.
 */
 
 #include <iostream>
