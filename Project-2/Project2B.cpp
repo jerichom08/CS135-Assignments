@@ -21,19 +21,6 @@ string *g_artist_names = new string[g_curr_size];
 int *g_song_durations = new int[g_curr_size];
 string *g_genres = new string[g_curr_size];
 
-/*
-    @post             :   Replace the old global
-                          dynamically allocated arrays
-                          with new dynamically allocated
-                          arrays of twice the size 
-                          ('g_curr_size' * 2). Update
-                          'g_curr_size' accordingly.
-                          Make sure you copy the contents
-                          of the older arrays. Do this
-                          for the following global-arrays:
-                          'g_song_names', 'g_artist_names', 
-                          'g_song_durations', 'g_genres'
-*/
 void allocateNew() {
     g_curr_size *= 2;
     string *new_song_names = new string[g_curr_size];
@@ -58,18 +45,7 @@ void allocateNew() {
     g_song_durations = new_song_durations;
     g_genres = new_genres;
 }
-/*
-    @param            :   The string with the 'filename'
-    @post             :   Reads the song, artists,
-                          song durations and genres into 
-                          the global-arrays and set the 
-                          value of 'g_number_of_songs'
-                          to the number of songs read.
-                          Call 'allocateNew()' to allocate 
-                          an array of larger size if the 
-                          dynamic arrays reach full 
-                          capacity.
-*/
+
 void readSongs(string filename) {
     ifstream fin(filename);
     if(fin.fail()) {
@@ -105,11 +81,73 @@ void readSongs(string filename) {
     fin.close();
 }
 
-int main(){
-    readSongs("songs.txt");
-    cout << g_curr_size << endl
-         << g_number_of_songs << endl;
-    for (int i = 0; i < g_curr_size; i++) {
-        cout << g_song_names[i] << endl;
+string *getGenreSongs(string genre, int &genreCount) {
+    string *gen = new string[g_number_of_songs];
+    genreCount = 0;
+    for (int i = 0; i < g_number_of_songs; i++) {
+        if(g_genres[i] == genre) {
+            gen[genreCount] = g_song_names[i];
+            genreCount++;
+        }
     }
+    return gen;
+}
+
+string *getSongsFromDuration(int duration, int &durationsCount, int filter) {
+    string *dur = new string[g_number_of_songs];
+    durationsCount = 0;
+    for (int i = 0; i < g_number_of_songs; i++) {
+        if (filter == 0 && g_song_durations[i] > duration) {
+            dur[durationsCount] = g_song_names[i];
+            durationsCount++;
+        }
+        else if (filter == 1 && g_song_durations[i] < duration) {
+            dur[durationsCount] = g_song_names[i];
+            durationsCount++;
+        }
+        else if (filter == 2 && g_song_durations[i] == duration) {
+            dur[durationsCount] = g_song_names[i];
+            durationsCount++;
+        }
+    }
+    return dur;
+}
+
+string *getUniqueArtists(int &uniqueCount) {
+    string *unique = new string[g_number_of_songs];
+    uniqueCount = 0;
+    for (int i = 0; i < g_number_of_songs; i++) {
+        int j;
+        for (j = 0; j < i; j++) {
+            if(g_artist_names[i] == g_artist_names[j]) {
+                break;
+            }
+        }
+        if(i == j) {
+            unique[uniqueCount] = g_artist_names[i];
+            uniqueCount++;
+        }
+    }
+    return unique;
+}
+
+string getFavoriteArtist() {
+    if(g_number_of_songs == 0) {
+        return "NONE";
+    }
+    int min = 0;
+    string fav;
+    for (int i = 0; i < g_number_of_songs; i++) {
+        int count = 0;
+        for (int j = 0; j < g_number_of_songs; j++) {
+            if(g_artist_names[i] == g_artist_names[j]) {
+                count++;
+            }
+        }
+        if(count > min) {
+            min = count;
+            fav = g_artist_names[i];
+        }
+    }
+    return fav;
 }
